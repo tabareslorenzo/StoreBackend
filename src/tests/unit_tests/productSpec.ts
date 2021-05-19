@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import app from '../../server';
+const token: string = process.env.TOKEN_TEST as string;
 
 const request = supertest(app);
 describe('Product Test endpoint responses', () => {
@@ -17,6 +18,7 @@ describe('Product Test endpoint responses', () => {
 
     it('post the api endpoint', async (done) => {
         const response = await request.post('/product/')
+        .set('Authorization', 'Bearer ' + token)
         .send({
             name: 'whatever',
             price: 12345,
@@ -26,7 +28,8 @@ describe('Product Test endpoint responses', () => {
         done();
     })
     it('deletes by id the api endpoint', async (done) => {
-        const response = await request.delete('/product/1');
+        const response = await request.delete('/product/1')
+        .set('Authorization', 'Bearer ' + token);
         expect(response.status).toBe(200);
         done();
     })

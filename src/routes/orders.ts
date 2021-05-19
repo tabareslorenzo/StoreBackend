@@ -1,18 +1,19 @@
 import express, { Request, Response } from 'express'
 import { Order, OrderStore } from '../models/order'
+import {authToken} from '../middleware/auth'
 
 const store = new OrderStore()
 const Router = express.Router()
 
-Router.get('/', async (_req: Request, res: Response) => {
+Router.get('/', authToken, async (_req: Request, res: Response) => {
     const orders = await store.index()
     res.json(orders)
   })
-Router.get('/:id',  async (req: Request, res: Response) => {
+Router.get('/:id',  authToken, async (req: Request, res: Response) => {
     const order = await store.show(req.body.id)
     res.json(order)
  })
- Router.post('/', async (req: Request, res: Response) => {
+ Router.post('/',  authToken, async (req: Request, res: Response) => {
     try {
         const order: Order = {
             status: req.body.status,
@@ -26,7 +27,7 @@ Router.get('/:id',  async (req: Request, res: Response) => {
         res.json(err)
     }
 })
-Router.delete('/:id', async (req: Request, res: Response) => {
+Router.delete('/:id', authToken, async (req: Request, res: Response) => {
     const deleted = await store.delete(req.body.id)
     res.json(deleted)
 })

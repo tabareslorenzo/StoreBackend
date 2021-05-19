@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { Product, ProductStore } from '../models/product'
+import {authToken} from '../middleware/auth'
 
 const store = new ProductStore()
 const Router = express.Router()
@@ -12,7 +13,7 @@ Router.get('/:id',  async (req: Request, res: Response) => {
     const product = await store.show(req.body.id)
     res.json(product)
  })
- Router.post('/', async (req: Request, res: Response) => {
+ Router.post('/', authToken, async (req: Request, res: Response) => {
     try {
         const product: Product = {
             name : req.body.name,
@@ -27,7 +28,7 @@ Router.get('/:id',  async (req: Request, res: Response) => {
         res.json(err)
     }
 })
-Router.delete('/:id', async (req: Request, res: Response) => {
+Router.delete('/:id', authToken, async (req: Request, res: Response) => {
     const deleted = await store.delete(req.body.id)
     res.json(deleted)
 })
